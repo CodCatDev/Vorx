@@ -1,7 +1,7 @@
 <div align="center">
     <img src="logo.png" alt="Vorx Engine Logo" width="200" border="0" border_radius="25">
     <h1>Vorx Engine</h1>
-    <h2>Stable builds</h2>
+    <h2>Dev builds</h2>
 </div>
 
 # Structure
