@@ -1,19 +1,20 @@
 <div align="center">
-    <img src="logo.png" alt="Vorx Engine Logo" width="200" border="0" border_radius="25">
+    <img src="assets/logo.png" alt="Vorx Engine Logo" width="200">
     <h1>Vorx Engine</h1>
-    <h2>Dev builds</h2>
+    <h2>26.0.1-DEV</h2>
+    <img src="assets/vorx.gif" alt="Vorx Engine CLI" width="50%">
 </div>
 
 # Structure
 
-- [Structure](README.md#structure)
-- [Overview](README.md#overview)
-- [Builds](README.md#builds)
-- [Installations](README.md#installations)
-    - [Releases](README.md#installations-via-releases)
-    - [Git](README.md#installations-via-git)
-        - [Stable](README.md#stable-builds)
-        - [Dev](README.md#dev-builds)
+- [Structure](#structure)
+- [Overview](#overview)
+- [Builds](#builds)
+- [Installations](#installations)
+    - [Releases](#installations-via-releases)
+    - [Git](#installations-via-git)
+        - [Stable](#stable-builds)
+        - [Dev](#dev-builds)
 
 # Overview
 
