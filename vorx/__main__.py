@@ -5,9 +5,11 @@
 # │ Console CLI │
 # └─────────────┘
 
-from cli import CliClient
+try:
+    from vorx.cli import main
+except ImportError:
+    from .cli import main
+except Exception as e:
+    print(f"Error importing cli: {e}")
 
-VERSION = "26.0.1"
-BUILD = "dev"
-
-CliClient(VERSION, BUILD)
+main()

@@ -1,9 +1,11 @@
 <div align="center">
     <img src="assets/logo.png" alt="Vorx Engine Logo" width="200">
     <h1>Vorx Engine</h1>
-    <h2>26.0.1-DEV</h2>
-    <img src="assets/vorx.gif" alt="Vorx Engine CLI" width="50%">
+    <h2>2026.0.1.1-DEV</h2>
+    <img src="assets/vorx.gif" alt="Vorx Engine CLI" width="80%">
 </div>
+
+<a href="CHANGELOG.md">Changelog 2026.0.1.1-Dev</a>
 
 # Structure
 
