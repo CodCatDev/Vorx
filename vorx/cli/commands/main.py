@@ -4,6 +4,7 @@ from ..commands import list as l
 from threading import Thread
 from time import time
 from socket import socket
+from os import makedirs, getcwd, path, mkdir
 
 class PingThread(Thread):
     def __init__(self):
@@ -77,3 +78,32 @@ def ping(args: list):
         print(f"\rError pinging server:\nResponsed in {t.ping:.2f} ms\nError: {t.error}")
     else:
         print(f"\rPing done! {t.ping:.2f} ms") 
+    
+def init(args: list):
+    print(logo)
+    print("Adding a basic configuration...")
+    currDir = getcwd()
+
+    name = input("Project name: ")
+    if len(name) == 0:
+        print("Error! Project name cannot be empty!")
+        return 1
+    author = input("Author name: ")
+    if len(author) == 0:
+        print("Error! Author name cannot be empty!")
+        return 1
+
+    mkdir(path.join(currDir, ".vorx"))
+    mkdir(path.join(currDir, "assets"))
+    mkdir(path.join(currDir, "scripts"))
+    mkdir(path.join(currDir, "scenes"))
+    with open(path.join(currDir, ".vorx", "config.json"), "w") as f:
+        data = "{\n"\
+                f'  "name": "{name}",\n'\
+                f'  "author": "{author}",\n'\
+                '  "version": "0.1.0"\n'\
+                "}"
+        f.write(data)
+    with open(path.join(currDir, "README.md"), "w") as f:
+        f.write(f"# {name}\n## Created by {author}\n\nThis project was created using Vorx Engine version {VERSION}-{BUILD}.")
+    print("Configuration added!")

@@ -10,5 +10,9 @@ list = {
     'ping': {
         'function': None,
         'description': "Ping the Vorx Engine server"
+    },
+    'init': {
+        'function': None,
+        'description': "Initialize a basic configuration in the current directory"
     }
 }
