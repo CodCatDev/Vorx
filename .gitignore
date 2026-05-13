@@ -2,16 +2,27 @@
 __pycache__
 *.pyc
 *.pyo
-*.pyd
 .Python
 .env
 venv/
 .venv/
 
+# IDE
 .vscode/
 .idea/
 *.swp
 *.swo
 
+# OS
 .DS_Store
 Thumbs.db
+
+# Dev files
+logs/
+build/
+*.pyd
+*.so
+*.c
+server/
+site/
+test/

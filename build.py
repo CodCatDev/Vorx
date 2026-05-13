@@ -1,5 +1,6 @@
 import os
 import sys
+sys.argv = ["build.py", "build_ext", "--inplace", "-q"]
 from setuptools import setup, Extension
 from Cython.Build import cythonize
 
@@ -16,11 +17,9 @@ for mod in modules:
     
     extensions.append(Extension(name=module_name, sources=[source_file]))
 
-sys.argv = ["build.py", "build_ext", "--inplace"]
-
 print("Compiling Cython modules...")
 setup(
-    ext_modules=cythonize(extensions)
+    ext_modules=cythonize(extensions, quiet=True)
 )
 
 print("Build complete. Cleaning up cache files...")

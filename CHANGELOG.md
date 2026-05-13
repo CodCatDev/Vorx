@@ -1,5 +1,20 @@
 # All Change Log history
 
+## [2026.0.3-dev] - 2026-05-13
+
+Fixes and updates
+
+### Added
+- Print a server status in the `ping` command
+- Replaced `socket tcp` with `http head` in `ping` command
+- Added colors to the CLI
+- Started working on the main render/window of the engine
+- Added OS detect to the core, for libs loading
+
+### Fixed
+- Fixed a bug with status in `ping` command
+- Fixed a `FileExistsError` in `init` command 
+
 ## [2026.0.2-dev] - 2026-05-12
 
 A "Core" update

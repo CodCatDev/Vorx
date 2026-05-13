@@ -3,14 +3,22 @@ from platform import system, python_version, architecture, python_implementation
 from ..commands import list as l
 from threading import Thread
 from time import time
-from socket import socket
-from os import makedirs, getcwd, path, mkdir
+from os import makedirs, getcwd, path, getlogin
+from http.client import HTTPSConnection
+from json import dump
+
+class c:
+    cyan = "\033[96m"
+    green = "\033[92m"
+    yellow = "\033[93m"
+    red = "\033[91m"
+    reset = "\033[0m"
 
 class PingThread(Thread):
     def __init__(self):
         super().__init__()
         self.daemon = True
-        self.response = None
+        self.res = None
         self.startTime = 0.0
         self.endTime = 0.0
         self.ping = 0.0
@@ -19,15 +27,16 @@ class PingThread(Thread):
     def run(self):
         try:
             self.startTime = time()
-            with socket() as s:
-                s.settimeout(5)
-                s.connect((SERVER_SOCK, 80))
+            conn = HTTPSConnection(SERVER_SOCK, 443, timeout=5)
+            conn.request("HEAD", "/")
+            self.res = conn.getresponse()
+            conn.close()
             self.endTime = time()
-            self.ping = (self.endTime - self.startTime) * 1000
         except Exception as e:
             self.error = str(e)
+            self.res = None
             self.endTime = time()
-            self.ping = (self.endTime - self.startTime) * 1000
+        self.ping = (self.endTime - self.startTime) * 1000
 
 
 logo = """ _    __                ______            _         
@@ -75,9 +84,11 @@ def ping(args: list):
         anim = anim[1:] + [anim[0]]
         t.join(0.1)
     if t.error is not None:
-        print(f"\rError pinging server:\nResponsed in {t.ping:.2f} ms\nError: {t.error}")
+        print(f"\r{c.red}Error pinging server:\nResponded in {t.ping:.2f} ms\nError: {t.error}{c.reset}")
     else:
-        print(f"\rPing done! {t.ping:.2f} ms") 
+        print(f"\rPing done! {t.ping:.2f} ms, status: {t.res.status} {t.res.reason}")
+        if t.res.status != 200:
+            print(f"{c.yellow}Warning: Server is responding but returned an error status code! This may indicate a problem with the server. Please check the server status or try again later.{c.reset}")
     
 def init(args: list):
     print(logo)
@@ -86,24 +97,43 @@ def init(args: list):
 
     name = input("Project name: ")
     if len(name) == 0:
-        print("Error! Project name cannot be empty!")
-        return 1
+        print(f"{c.yellow}Warn! Project name cannot be empty! Setting it to default..{c.reset}")
+        name = "MyVorxProject"
     author = input("Author name: ")
     if len(author) == 0:
-        print("Error! Author name cannot be empty!")
-        return 1
+        print(f"{c.red}Error! Author name cannot be empty! Setting it to pc username..{c.reset}")
+        author = getlogin()
 
-    mkdir(path.join(currDir, ".vorx"))
-    mkdir(path.join(currDir, "assets"))
-    mkdir(path.join(currDir, "scripts"))
-    mkdir(path.join(currDir, "scenes"))
-    with open(path.join(currDir, ".vorx", "config.json"), "w") as f:
-        data = "{\n"\
-                f'  "name": "{name}",\n'\
-                f'  "author": "{author}",\n'\
-                '  "version": "0.1.0"\n'\
-                "}"
-        f.write(data)
-    with open(path.join(currDir, "README.md"), "w") as f:
-        f.write(f"# {name}\n## Created by {author}\n\nThis project was created using Vorx Engine version {VERSION}-{BUILD}.")
-    print("Configuration added!")
+    makedirs(path.join(currDir, ".vorx"), exist_ok=True)
+    makedirs(path.join(currDir, "assets"), exist_ok=True)
+    makedirs(path.join(currDir, "scripts"), exist_ok=True)
+    makedirs(path.join(currDir, "scenes"), exist_ok=True)
+    with open(path.join(currDir, ".vorx", "config.json"), "w", encoding="utf-8") as f:
+        data ={
+            "name": name,
+            "author": author,
+            "gameVersion": "1.0.0",
+            "engineVersion": f"{VERSION}-{BUILD}",
+            "serverSync": True
+        }
+        dump(data, f, indent=4, sort_keys=True, ensure_ascii=False)
+    with open(path.join(currDir, "README.md"), "w", encoding="utf-8") as f:
+        readme = f"""<div align="center">
+    <h1> 🚀 {name}</h1>
+
+![Engine](https://img.shields.io/badge/Engine-Vorx_2026.0.2-orange?style=flat-square)
+![Build](https://img.shields.io/badge/Build-dev-blue?style=flat-square)
+</div>
+
+
+## 👤 by: {author}
+
+## 🛠 Run:
+
+install [VorxEngine](https://github.com/CodCatDev/Vorx)
+
+import project to Vorx Engine
+
+and run from Vorx editor"""
+        f.write(readme)
+    print(f"{c.green}Configuration added!{c.reset}")

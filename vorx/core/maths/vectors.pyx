@@ -1,4 +1,4 @@
-from libc.math cimport sqrt
+from libc.math cimport sqrtf
 
 cdef class Vector2:
     cdef public float x, y
@@ -19,20 +19,18 @@ cdef class Vector2:
     def __repr__(self):
         return f"Vector2({self.x}, {self.y})"
 
-    def length(self):
-        return sqrt(self.x * self.x + self.y * self.y)
+    cpdef float length(self):
+        return sqrtf(self.x * self.x + self.y * self.y)
 
-    def normalized(self):
-        cdef float l = sqrt(self.x * self.x + self.y * self.y)
+    cpdef Vector2 normalized(self):
+        cdef float l = sqrtf(self.x * self.x + self.y * self.y)
         if l == 0:
             return Vector2(0.0, 0.0)
         
-        # возвращаем новый вектор
         return Vector2(self.x / l, self.y / l)
 
-    def normalize(self):
-        # или меняем текущий (in-place)
-        cdef float l = sqrt(self.x * self.x + self.y * self.y)
+    cpdef void normalize(self):
+        cdef float l = sqrtf(self.x * self.x + self.y * self.y)
         if l != 0:
             self.x /= l
             self.y /= l
