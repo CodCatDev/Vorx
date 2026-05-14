@@ -1,7 +1,7 @@
 from . import main
-from . import list
+from .cmdList import cmdList
 
-list.list['help']['function'] = main.help
-list.list['version']['function'] = main.version
-list.list['ping']['function'] = main.ping
-list.list['init']['function'] = main.init
+cmdList['help']['function'] = main.cmdHelp
+cmdList['version']['function'] = main.version
+cmdList['ping']['function'] = main.ping
+cmdList['init']['function'] = main.init

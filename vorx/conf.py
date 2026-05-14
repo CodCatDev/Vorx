@@ -1,4 +1,4 @@
-VERSION = "2026.0.2"
+VERSION = "2026.0.3.1"
 BUILD = "dev"
-BUILD_DATE = "2026-05-12"
+BUILD_DATE = "2026-05-14"
 SERVER_SOCK = "vorx.codcatdev.site"

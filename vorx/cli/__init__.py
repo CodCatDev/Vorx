@@ -6,20 +6,17 @@
 
 from sys import argv as rg
 
-try:
-    import cli.commands as commands
-except ImportError:
-    from . import commands
+from .commands import cmdList
 
 def main():
     argv = rg[1:]
     l = len(argv)
-    if l == 0 or not argv[0] in commands.list.list.keys():
-        commands.list.list['help']['function'](argv[:1])
+    if l == 0 or not argv[0] in commands.cmdList.keys():
+        commands.cmdList['help']['function'](argv[:1])
     else:
-        cmd = commands.list.list[argv[0]]
+        cmd = commands.cmdList[argv[0]]
         if cmd['function'] is not None:
             cmd['function'](argv[:1])
         else:
             print(f"Command not found")
-            commands.list.list['help']['function'](argv[:1])
+            commands.cmdList['help']['function'](argv[:1])

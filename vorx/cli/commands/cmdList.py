@@ -1,4 +1,4 @@
-list = {
+cmdList = {
     'help': {
         'function': None,
         'description': "Show the Vorx Engine logo and version information"

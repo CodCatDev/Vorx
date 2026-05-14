@@ -1,9 +1,10 @@
 from ...conf import VERSION, BUILD, BUILD_DATE, SERVER_SOCK
 from platform import system, python_version, architecture, python_implementation, release
-from ..commands import list as l
+from ..commands import cmdList as l
 from threading import Thread
 from time import time
-from os import makedirs, getcwd, path, getlogin
+from os import makedirs, getcwd, getlogin
+from pathlib import Path
 from http.client import HTTPSConnection
 from json import dump
 
@@ -46,15 +47,15 @@ logo = """ _    __                ______            _
 |___/\\____/_/  /_/|_/_____/_/ /_/\\__, /_/_/ /_/\\___/ 
                                 /____/               """
 
-def help(args: list):
+def cmdHelp(args: list):
     verInfo = f"Version {VERSION}-{BUILD}"
     sysInfo = f"Run on {system()} {release()} with {python_implementation()} {python_version()}"
     pad1 = round(len(logo.splitlines()[0]) / 2 - len(verInfo) / 2)
     pad2 = round(len(logo.splitlines()[0]) / 2 - len(sysInfo) / 2)
     cmds = ""
-    for cmd in l.list.keys():
+    for cmd in l.keys():
         pad = 10 - len(cmd)
-        cmds += f"\n    {cmd}{' ' * pad}{l.list[cmd]['description']}"
+        cmds += f"\n    {cmd}{' ' * pad}{l[cmd]['description']}"
     text = f"""{logo}
 {' ' * pad1}{verInfo}
 {' ' * pad2}{sysInfo}
@@ -93,7 +94,7 @@ def ping(args: list):
 def init(args: list):
     print(logo)
     print("Adding a basic configuration...")
-    currDir = getcwd()
+    currDir = Path(getcwd()).resolve()
 
     name = input("Project name: ")
     if len(name) == 0:
@@ -104,11 +105,14 @@ def init(args: list):
         print(f"{c.red}Error! Author name cannot be empty! Setting it to pc username..{c.reset}")
         author = getlogin()
 
-    makedirs(path.join(currDir, ".vorx"), exist_ok=True)
-    makedirs(path.join(currDir, "assets"), exist_ok=True)
-    makedirs(path.join(currDir, "scripts"), exist_ok=True)
-    makedirs(path.join(currDir, "scenes"), exist_ok=True)
-    with open(path.join(currDir, ".vorx", "config.json"), "w", encoding="utf-8") as f:
+    makedirs(currDir / name, exist_ok=True)
+    currDir = Path(currDir / name).resolve()
+
+    makedirs(currDir / ".vorx", exist_ok=True)
+    makedirs(currDir / "scenes", exist_ok=True)
+    makedirs(currDir / "scripts", exist_ok=True)
+    makedirs(currDir / "assets", exist_ok=True)
+    with open(currDir / ".vorx" / "config.json", "w", encoding="utf-8") as f:
         data ={
             "name": name,
             "author": author,
@@ -117,12 +121,12 @@ def init(args: list):
             "serverSync": True
         }
         dump(data, f, indent=4, sort_keys=True, ensure_ascii=False)
-    with open(path.join(currDir, "README.md"), "w", encoding="utf-8") as f:
+    with open(currDir /"README.md", "w", encoding="utf-8") as f:
         readme = f"""<div align="center">
     <h1> 🚀 {name}</h1>
 
-![Engine](https://img.shields.io/badge/Engine-Vorx_2026.0.2-orange?style=flat-square)
-![Build](https://img.shields.io/badge/Build-dev-blue?style=flat-square)
+![Engine](https://img.shields.io/badge/Engine-Vorx_{VERSION}-orange?style=flat-square)
+![Build](https://img.shields.io/badge/Build-{BUILD}-blue?style=flat-square)
 </div>
 
 

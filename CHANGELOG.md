@@ -1,5 +1,19 @@
 # All Change Log history
 
+## [2026.0.3.1-dev] - 2026-05-14
+
+Many fixes and rework
+
+### Added
+- Rework the CLI cmd names system
+- Added the `dot`, `distanceTo`, `length` and his squared versions to the `Vector2` class (vorx/core/maths/vectors.pyx)
+
+- Added a `SDL2` libs for `MacOS`, `arm64` and `x64` (lib/macosx)
+- Added a `SDL2` libs for `Linux`, `x64` (lib/linux)
+
+### Fixes
+- Fixed a bug involving the redefinition of standard functions (`help`, `list`) (vorx/cli/commands/main.py)
+
 ## [2026.0.3-dev] - 2026-05-13
 
 Fixes and updates

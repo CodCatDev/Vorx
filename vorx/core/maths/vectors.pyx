@@ -19,8 +19,29 @@ cdef class Vector2:
     def __repr__(self):
         return f"Vector2({self.x}, {self.y})"
 
+    def __truediv__(self, float scalar):
+        if scalar == 0:
+            raise ZeroDivisionError("Vector2 division by zero")
+        return Vector2(self.x / scalar, self.y / scalar)
+
     cpdef float length(self):
         return sqrtf(self.x * self.x + self.y * self.y)
+
+    cpdef float lengthSquared(self):
+        return self.x * self.x + self.y * self.y
+
+    cpdef float dot(self, Vector2 other):
+        return self.x * other.x + self.y * other.y
+
+    cpdef float distanceTo(self, Vector2 other):
+        cdef float dx = self.x - other.x
+        cdef float dy = self.y - other.y
+        return sqrtf(dx * dx + dy * dy)
+
+    cpdef float distanceSquaredTo(self, Vector2 other):
+        cdef float dx = self.x - other.x
+        cdef float dy = self.y - other.y
+        return dx * dx + dy * dy
 
     cpdef Vector2 normalized(self):
         cdef float l = sqrtf(self.x * self.x + self.y * self.y)
@@ -29,8 +50,10 @@ cdef class Vector2:
         
         return Vector2(self.x / l, self.y / l)
 
-    cpdef void normalize(self):
+    cpdef Vector2 normalize(self):
         cdef float l = sqrtf(self.x * self.x + self.y * self.y)
         if l != 0:
             self.x /= l
             self.y /= l
+        
+        return self
