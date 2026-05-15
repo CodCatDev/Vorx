@@ -1,0 +1,11 @@
+# Cython
+*.pyx linguist-language=Cython
+*.pyx linguist-detectable=true
+
+# Python
+*.py linguist-language=Python
+*.py linguist-detectable=true
+
+# C-C++ Delete
+*.c linguist-generated=true
+*.cpp linguist-generated=true

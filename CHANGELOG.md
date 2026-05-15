@@ -1,5 +1,18 @@
 # All Change Log history
 
+## [2026.0.4-dev] - 2026-05-15
+
+Yeaa! new vectors and windows!
+
+### Added
+- Added In-place operations (+= -= *= /=) to `Vector2`
+- Added internal `asVec2()` method, returning a `Vec2` struct for C-level conversions
+- Added `.gitattributes` file for github language detection
+- Added a `shapes.pyx` with `Rect`, `Polygon` and `Shape` classes
+- Added a `Renderer`, written in Cython
+- Added a DocString to `Vector2`, `Shapes` and `Renderer`
+- Added a demo scene (`demo.py`)
+
 ## [2026.0.3.1-dev] - 2026-05-14
 
 Many fixes and rework

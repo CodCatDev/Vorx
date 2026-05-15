@@ -1,10 +1,10 @@
 <div align="center">
     <img src="assets/logo.png" alt="Vorx Engine Logo" width="200">
     <h1>Vorx Engine</h1>
-    <h2>2026.0.3.1-DEV</h2>
+    <h2>2026.0.4-DEV</h2>
 </div>
 
-<a href="CHANGELOG.md">Changelog 2026.0.3.1-Dev</a>
+<a href="CHANGELOG.md">Changelog 2026.0.4-Dev</a>
 
 # Structure
 

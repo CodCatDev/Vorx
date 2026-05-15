@@ -7,7 +7,9 @@ from Cython.Build import cythonize
 print("VorxEngine build script")
 
 modules = [
-    "vorx/core/maths/vectors"
+    "vorx/core/maths/vectors",
+    "vorx/objects/shapes",
+    "vorx/core/renderer"
 ]
 
 extensions = []
