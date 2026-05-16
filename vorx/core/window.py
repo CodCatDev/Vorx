@@ -3,6 +3,8 @@ from pathlib import Path
 import sys
 import platform
 import ctypes
+from ..conf import VERSION, BUILD
+
 libsDir = Path(__file__).resolve().parent.parent.parent / "lib"
 runningOS = os.name
 
@@ -16,35 +18,40 @@ elif sys.platform == "darwin":
         libDir = libsDir / "macos-m"
     else:
         libDir = libsDir / "macos-in"
+
+def hexToRgb(hex_code):
+    hex_code = hex_code.lstrip('#')
+    return tuple(int(hex_code[i:i+2], 16) for i in (0, 2, 4))
+
 os.environ['PYSDL2_DLL_PATH'] = str(libDir)
 import sdl2
 import sdl2.ext as ext
-from .renderer import buildGeometryBatch, freeGeometryBatch
+from .renderer import renderScene
 
 class Window:
     def __init__(self):
         ext.init()
-        self.window = ext.Window("Vorx", size=(800, 600))
-        self.renderer = ext.Renderer(self.window)
+        self.window = ext.Window("Vorx", size=(800, 600), flags=sdl2.SDL_WINDOW_RESIZABLE)
+        self.renderer = ext.Renderer(self.window, flags=sdl2.SDL_RENDERER_ACCELERATED)
+        info = sdl2.SDL_RendererInfo()
+        sdl2.SDL_GetRendererInfo(self.renderer.sdlrenderer, ctypes.byref(info))
+        print(f"Vorx Engine {VERSION}-{BUILD} (Graphics: {info.name.decode()}, run on {platform.system()} {platform.release()})")
 
-    def draw(self, scene_shapes):
-        self.renderer.clear()
+        self.rawRendererPtr = ctypes.cast(self.renderer.sdlrenderer, ctypes.c_void_p).value
         
-        v_addr, i_addr, num_v, num_i = buildGeometryBatch(scene_shapes)
+        self.cVertices = None
+        self.cIndices = None
+
+    def draw(self, rawScene):
+
+        scene = rawScene.parse
+
+        r, g, b = hexToRgb(scene['background'])
+
+        self.renderer.clear(color=[r, g, b, 255])
         
-        if num_v > 0:
-            c_vertices = ctypes.cast(v_addr, ctypes.POINTER(sdl2.SDL_Vertex))
-            c_indices = ctypes.cast(i_addr, ctypes.POINTER(ctypes.c_int))
-            
-            sdl2.SDL_RenderGeometry(
-                self.renderer.sdlrenderer,
-                None,
-                c_vertices, num_v,
-                c_indices, num_i
-            )
-            
-            freeGeometryBatch(v_addr, i_addr)
-            
+        renderScene(self.rawRendererPtr, scene['objects'])
+        
         self.renderer.present()
 
     def getExt(self):

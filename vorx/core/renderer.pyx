@@ -1,16 +1,36 @@
 from libc.stdlib cimport malloc, free
 from libc.stdint cimport uintptr_t
 
+cdef extern from "SDL.h":
+    cdef struct SDL_Renderer:
+        pass
+        
+    cdef struct SDL_FPoint:
+        float x
+        float y
+        
+    cdef struct SDL_Color:
+        unsigned char r
+        unsigned char g
+        unsigned char b
+        unsigned char a
+        
+    cdef struct SDL_Vertex:
+        SDL_FPoint position
+        SDL_Color color
+        SDL_FPoint tex_coord
+        
+    int SDL_RenderGeometry(SDL_Renderer* renderer, void* texture, 
+                           SDL_Vertex* vertices, int num_vertices, 
+                           int* indices, int num_indices)
+
 from vorx.objects.shapes cimport Shape, Rect, Polygon, ShapeType, SHAPE_RECT, SHAPE_POLYGON
 
-cdef struct SDL_Color:
-    unsigned char r, g, b, a
-cdef struct SDL_FPoint:
-    float x, y
-cdef struct SDL_Vertex:
-    SDL_FPoint position
-    SDL_Color color
-    SDL_FPoint tex_coord
+DEF MAX_VERTICES = 10000
+DEF MAX_INDICES = 30000
+
+cdef SDL_Vertex batch_vertices[MAX_VERTICES]
+cdef int batch_indices[MAX_INDICES]
 
 cdef inline void pushRect(SDL_Vertex* v_arr, int* i_arr, int* v_off, int* i_off, Rect obj):
     cdef int v = v_off[0]
@@ -29,6 +49,8 @@ cdef inline void pushRect(SDL_Vertex* v_arr, int* i_arr, int* v_off, int* i_off,
         v_arr[v + idx].color.g = g
         v_arr[v + idx].color.b = b
         v_arr[v + idx].color.a = 255
+        v_arr[v + idx].tex_coord.x = 0.0
+        v_arr[v + idx].tex_coord.y = 0.0
 
     i_arr[i] = v; i_arr[i+1] = v+1; i_arr[i+2] = v+2
     i_arr[i+3] = v+2; i_arr[i+4] = v+3; i_arr[i+5] = v
@@ -52,6 +74,8 @@ cdef inline void pushPolygon(SDL_Vertex* v_arr, int* i_arr, int* v_off, int* i_o
         v_arr[v + idx].color.g = g
         v_arr[v + idx].color.b = b
         v_arr[v + idx].color.a = 255
+        v_arr[v + idx].tex_coord.x = 0.0
+        v_arr[v + idx].tex_coord.y = 0.0
 
     for idx in range(num_pts - 2):
         i_arr[i] = v
@@ -60,40 +84,26 @@ cdef inline void pushPolygon(SDL_Vertex* v_arr, int* i_arr, int* v_off, int* i_o
         i += 3
 
     v_off[0] += num_pts
-    i_off[0] += (num_pts - 2) * 3
+    i_off[0] += i
 
-cpdef tuple buildGeometryBatch(list shapes):
-    cdef int total_v = 0
-    cdef int total_i = 0
+cpdef void renderScene(size_t rendererAddr, list shapes):
+    cdef SDL_Renderer* renderer = <SDL_Renderer*>rendererAddr
+    cdef int v_offset = 0
+    cdef int i_offset = 0
     cdef Shape base_shape
 
     for obj in shapes:
         base_shape = <Shape>obj
+        
+        if v_offset + 100 > MAX_VERTICES or i_offset + 300 > MAX_INDICES:
+            SDL_RenderGeometry(renderer, NULL, batch_vertices, v_offset, batch_indices, i_offset)
+            v_offset = 0
+            i_offset = 0
+            
         if base_shape.type == SHAPE_RECT:
-            total_v += 4
-            total_i += 6
+            pushRect(batch_vertices, batch_indices, &v_offset, &i_offset, <Rect>obj)
         elif base_shape.type == SHAPE_POLYGON:
-            total_v += <int>len((<Polygon>obj).points)
-            total_i += <int>(len((<Polygon>obj).points) - 2) * 3
+            pushPolygon(batch_vertices, batch_indices, &v_offset, &i_offset, <Polygon>obj)
 
-    if total_v == 0:
-        return (0, 0, 0, 0)
-
-    cdef SDL_Vertex* vertices = <SDL_Vertex*>malloc(total_v * sizeof(SDL_Vertex))
-    cdef int* indices = <int*>malloc(total_i * sizeof(int))
-
-    cdef int v_offset = 0
-    cdef int i_offset = 0
-
-    for obj in shapes:
-        base_shape = <Shape>obj
-        if base_shape.type == SHAPE_RECT:
-            pushRect(vertices, indices, &v_offset, &i_offset, <Rect>obj)
-        elif base_shape.type == SHAPE_POLYGON:
-            pushPolygon(vertices, indices, &v_offset, &i_offset, <Polygon>obj)
-
-    return (<size_t>vertices, <size_t>indices, total_v, total_i)
-
-cpdef void freeGeometryBatch(size_t v_addr, size_t i_addr):
-    free(<void*>v_addr)
-    free(<void*>i_addr)
+    if v_offset > 0:
+        SDL_RenderGeometry(renderer, NULL, batch_vertices, v_offset, batch_indices, i_offset)

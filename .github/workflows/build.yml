@@ -1,0 +1,45 @@
+name: Build Engine
+
+on:
+  push:
+    branches: [ stable ]
+  workflow_dispatch: 
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ['3.11']
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install SDL2 (Linux)
+      if: runner.os == 'Linux'
+      run: sudo apt-get update && sudo apt-get install -y libsdl2-dev
+
+    - name: Install SDL2 (macOS)
+      if: runner.os == 'macOS'
+      run: brew install sdl2
+
+    - name: Install Python dependencies
+      run: python -m pip install --upgrade pip Cython setuptools
+
+    - name: Build extension
+      run: python build.py
+
+    - name: Upload compiled files
+      uses: actions/upload-artifact@v4
+      with:
+        name: engine-build-${{ matrix.os }}
+        path: |
+          *.so
+          *.pyd
+          SDL2.dll

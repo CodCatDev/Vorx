@@ -26,4 +26,3 @@ build/
 *.c
 server/
 site/
-test/

@@ -1,10 +1,10 @@
 <div align="center">
     <img src="assets/logo.png" alt="Vorx Engine Logo" width="200">
     <h1>Vorx Engine</h1>
-    <h2>2026.0.4-DEV</h2>
+    <h2>2026.0.5-DEV</h2>
 </div>
 
-<a href="CHANGELOG.md">Changelog 2026.0.4-Dev</a>
+<a href="CHANGELOG.md">Changelog 2026.0.5-Dev</a>
 
 # Structure
 
@@ -16,7 +16,10 @@
     - [Git](#installations-via-git)
         - [Stable](#stable-builds)
         - [Dev](#dev-builds)
-        - [Setup](#setup)
+    - [Setup](#setup)
+        - [Windows](#windows)
+        - [Linux](#linux)
+        - [Mac](#mac)
 
 # Overview
 
@@ -62,12 +65,57 @@ For install dev builds from git, use the following command
 git clone --branch dev https://github.com/CodCatDev/Vorx.git
 ```
 
-### Setup
+## Setup
 
-If you have cloned the repo, run the following command to setup all dependencies and C components
+### Windows
+
+If you install from `git`, run this commands to build engine core:
 
 ```bash
 cd Vorx
 pip install -r requirements.txt
 python build.py
+```
+
+If you install from `releases`, all be done!
+
+### Linux
+
+Install a Sdl2 Libs
+```bash
+sudo apt-get update
+sudo apt-get install libsdl2-2.0-0 libsdl2-dev
+```
+
+For arch:
+```bash
+sudo pacman -S sdl2
+```
+
+For Fedora/RHEL:
+```bash
+sudo dnf install SDL2-devel
+```
+
+And build engine core, with libs:
+```bash
+cd Vorx
+pip3 install -r requirements.txt
+python3 build.py
+```
+
+### Mac
+
+Install [Homebrew](https://brew.sh/)
+
+download SDL2-dev
+```bash
+brew install sdl2
+```
+
+install all and build
+```bash
+cd Vorx
+pip3 install -r requirements.txt
+python3 build.py
 ```

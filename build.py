@@ -1,35 +1,47 @@
-import os
-import sys
-sys.argv = ["build.py", "build_ext", "--inplace", "-q"]
-from setuptools import setup, Extension
+from setuptools import setup
 from Cython.Build import cythonize
+from distutils.extension import Extension
+import sys
 
-print("VorxEngine build script")
+inc_dirs = []
+lib_dirs = []
+libs = ["SDL2"]
+compile_args = []
 
-modules = [
-    "vorx/core/maths/vectors",
-    "vorx/objects/shapes",
-    "vorx/core/renderer"
+if sys.platform == "win32":
+    inc_dirs = ["lib/win/cInc"]
+    lib_dirs = ["lib/win/cLibs"]
+    compile_args = ["/O2"]
+elif sys.platform.startswith("linux"):
+    inc_dirs = ["/usr/include/SDL2"]
+    compile_args = ["-O3"]
+elif sys.platform == "darwin":
+    inc_dirs = ["/opt/homebrew/include/SDL2", "/usr/local/include/SDL2"]
+    lib_dirs = ["/opt/homebrew/lib", "/usr/local/lib"]
+    compile_args = ["-O3"]
+
+ext = [
+    Extension(
+        "vorx.objects.shapes",
+        ["vorx/objects/shapes.pyx"],
+        extra_compile_args=compile_args
+    ),
+    Extension(
+        "vorx.core.maths.vectors",
+        ["vorx/core/maths/vectors.pyx"],
+        extra_compile_args=compile_args
+    ),
+    Extension(
+        "vorx.core.renderer",
+        ["vorx/core/renderer.pyx"],
+        include_dirs=inc_dirs,
+        library_dirs=lib_dirs,
+        libraries=libs,
+        extra_compile_args=compile_args
+    )
 ]
 
-extensions = []
-for mod in modules:
-    module_name = mod.replace("/", ".")
-    source_file = f"{mod}.pyx"
-    
-    extensions.append(Extension(name=module_name, sources=[source_file]))
-
-print("Compiling Cython modules...")
 setup(
-    ext_modules=cythonize(extensions, quiet=True)
+    ext_modules=cythonize(ext),
+    script_args=['build_ext', '--inplace']
 )
-
-print("Build complete. Cleaning up cache files...")
-
-for mod in modules:
-    c_file = f"{mod}.c"
-    if os.path.exists(c_file):
-        os.remove(c_file)
-        print(f"cache deleted: {c_file}")
-
-print("All done!")

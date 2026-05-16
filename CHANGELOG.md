@@ -1,5 +1,18 @@
 # All Change Log history
 
+## [2026.0.5-dev] - 2026-05-16
+
+Rework MAANY things! :D
+
+### Added
+- Switched to raw C pointers and batched geometry rendering.
+- Zero Python overhead in the render loop -> insane FPS increase.
+- Demo of the scene parser
+- GithubActions
+- New Windows Libs
+- New Install instructions
+- Demo scene in `test/`
+
 ## [2026.0.4-dev] - 2026-05-15
 
 Yeaa! new vectors and windows!
@@ -20,7 +33,6 @@ Many fixes and rework
 ### Added
 - Rework the CLI cmd names system
 - Added the `dot`, `distanceTo`, `length` and his squared versions to the `Vector2` class (vorx/core/maths/vectors.pyx)
-
 - Added a `SDL2` libs for `MacOS`, `arm64` and `x64` (lib/macosx)
 - Added a `SDL2` libs for `Linux`, `x64` (lib/linux)
 
