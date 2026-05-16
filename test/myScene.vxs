@@ -1,0 +1,14 @@
+{
+    "name":"MainScene",
+    "background":"#2f2f2f",
+    "objects":[
+        {
+            "type":"rect",
+            "w":100,
+            "h":100,
+            "x":100,
+            "y":100,
+            "color":[255, 255, 255]
+        }
+    ]
+}
