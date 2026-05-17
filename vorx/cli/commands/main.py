@@ -118,7 +118,13 @@ def init(args: list):
             "author": author,
             "gameVersion": "1.0.0",
             "engineVersion": f"{VERSION}-{BUILD}",
-            "serverSync": True
+            "serverSync": True,
+            "defaultScene": "start",
+            "data": {
+                "scenes":{
+                    "start": "defaultScene"
+                }
+            }
         }
         dump(data, f, indent=4, sort_keys=True, ensure_ascii=False)
     with open(currDir /"README.md", "w", encoding="utf-8") as f:
@@ -140,4 +146,14 @@ import project to Vorx Engine
 
 and run from Vorx editor"""
         f.write(readme)
+    myDir = Path(__file__).resolve().parent
+    with open(myDir / "_scriptMain.py", "r", encoding="utf-8") as f:
+        main = f.read()
+    with open(currDir / "vorxMain.py", "w", encoding="utf-8") as f:
+        f.write(main)
+    
+    with open(myDir / "_sceneMain.vxs", "r", encoding="utf-8") as f:
+        sceneMain = f.read()
+    with open(currDir / "scenes" / "defaultScene.vxs", "w", encoding="utf-8") as f:
+        f.write(sceneMain)
     print(f"{c.green}Configuration added!{c.reset}")

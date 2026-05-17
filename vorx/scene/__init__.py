@@ -13,4 +13,7 @@ class RawScene:
             exit(1)
         
         self.parse = sceneParser(self.data)
+    
+    def __repr__(self) -> str:
+        return f"vorx.scene.RawScene(fileName='{self.file.name}', file=TextIOWrapper(...))"
 

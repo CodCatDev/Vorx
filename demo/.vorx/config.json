@@ -1,0 +1,13 @@
+{
+    "author": "CodCatDev",
+    "data": {
+        "scenes": {
+            "start": "defaultScene"
+        }
+    },
+    "defaultScene": "start",
+    "engineVersion": "2026.0.5.1-dev",
+    "gameVersion": "1.0.0",
+    "name": "demo",
+    "serverSync": true
+}

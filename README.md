@@ -1,10 +1,15 @@
 <div align="center">
     <img src="assets/logo.png" alt="Vorx Engine Logo" width="200">
     <h1>Vorx Engine</h1>
-    <h2>2026.0.5-DEV</h2>
+    <h2>2026.0.5.1-DEV</h2>
+    <p>
+        <a href="CHANGELOG.md">
+            <img src="https://img.shields.io/badge/Build-2026.0.5--DEV-blue?style=flat" alt="Build">
+        </a>
+        <img src="https://img.shields.io/badge/Python-3.8%2B-yellow?style=flat&logo=python" alt="Python">
+        <img src="https://img.shields.io/badge/License-Apache%202.0-blue?style=flat" alt="License">
+    </p>
 </div>
-
-<a href="CHANGELOG.md">Changelog 2026.0.5-Dev</a>
 
 # Structure
 

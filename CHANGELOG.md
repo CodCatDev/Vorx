@@ -1,5 +1,17 @@
 # All Change Log history
 
+## [2026.0.5.1-dev] - 2026-05-17
+
+Mini update.. Yeaah..
+
+### Added
+- Demo scene in `demo/`, can be created with `vorx init`
+- Scene Template in Demo
+- Add a REPR to `RawScene`
+
+### Fixed
+- Fixed a bug in the `init` command
+
 ## [2026.0.5-dev] - 2026-05-16
 
 Rework MAANY things! :D
