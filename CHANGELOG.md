@@ -1,5 +1,15 @@
 # All Change Log history
 
+## [2026.0.5.2-dev] - 2026-05-22
+
+Server update, and Actions
+
+### Added
+- Site! [Vorx.Pro](https://vorx.pro)
+- Server-side API
+- Command `ping` show Uptime, Memory, CPU, and API Version
+- Github Actions for builds engine
+
 ## [2026.0.5.1-dev] - 2026-05-17
 
 Mini update.. Yeaah..

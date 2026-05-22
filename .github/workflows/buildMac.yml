@@ -1,0 +1,33 @@
+name: Build Engine (macOS)
+
+on:
+  push:
+    branches: [ stable ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Install SDL2 (macOS)
+      run: brew install sdl2
+
+    - name: Install Python dependencies
+      run: python -m pip install --upgrade pip Cython setuptools
+
+    - name: Build extension
+      run: python build.py
+
+    - name: Upload compiled files
+      uses: actions/upload-artifact@v4
+      with:
+        name: engine-build-macos
+        path: compiled/

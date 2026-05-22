@@ -1,11 +1,11 @@
-from ...conf import VERSION, BUILD, BUILD_DATE, SERVER_SOCK
+from ...conf import VERSION, BUILD, BUILD_DATE, PING_SOCK
 from platform import system, python_version, architecture, python_implementation, release
-from ..commands import cmdList as l
+from ..commands.cmdList import cmdList as l
 from threading import Thread
 from time import time
 from os import makedirs, getcwd, getlogin
 from pathlib import Path
-from http.client import HTTPSConnection
+from requests import get
 from json import dump
 
 class c:
@@ -28,9 +28,8 @@ class PingThread(Thread):
     def run(self):
         try:
             self.startTime = time()
-            conn = HTTPSConnection(SERVER_SOCK, 443, timeout=5)
-            conn.request("HEAD", "/")
-            self.res = conn.getresponse()
+            conn = get(PING_SOCK)
+            self.res = conn
             conn.close()
             self.endTime = time()
         except Exception as e:
@@ -87,8 +86,19 @@ def ping(args: list):
     if t.error is not None:
         print(f"\r{c.red}Error pinging server:\nResponded in {t.ping:.2f} ms\nError: {t.error}{c.reset}")
     else:
-        print(f"\rPing done! {t.ping:.2f} ms, status: {t.res.status} {t.res.reason}")
-        if t.res.status != 200:
+        print(f"\rPing done! {t.ping:.2f} ms, status: {t.res.status_code}")
+        try:
+            js = t.res.json()
+        except:
+            print(f"{c.red}Error parsing server response! Maybe the server is down?{c.reset}")
+            print(f"Response: {t.res.text}")
+            exit(1)
+        print(f"Server status:")
+        print(f"  - Uptime: {js.get('data').get('uptimeText')}")
+        print(f"  - Memory: {js.get('data').get('ramPercent')}%")
+        print(f"  - CPU: {js.get('data').get('cpuPercent')}%")
+        print(f"  - Api Version: v{js.get('apiVersion')}")
+        if t.res.status_code != 200:
             print(f"{c.yellow}Warning: Server is responding but returned an error status code! This may indicate a problem with the server. Please check the server status or try again later.{c.reset}")
     
 def init(args: list):

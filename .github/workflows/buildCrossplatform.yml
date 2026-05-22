@@ -1,9 +1,9 @@
-name: Build Engine
+name: Build Engine (Cross-platform)
 
 on:
   push:
     branches: [ stable ]
-  workflow_dispatch: 
+  workflow_dispatch:
 
 jobs:
   build:
@@ -39,7 +39,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: engine-build-${{ matrix.os }}
-        path: |
-          *.so
-          *.pyd
-          SDL2.dll
+        path: compiled/

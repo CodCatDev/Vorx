@@ -1,14 +1,22 @@
 <div align="center">
     <img src="assets/logo.png" alt="Vorx Engine Logo" width="200">
     <h1>Vorx Engine</h1>
-    <h2>2026.0.5.1-DEV</h2>
+    <h2>2026.0.5.2-DEV</h2>
     <p>
         <a href="CHANGELOG.md">
             <img src="https://img.shields.io/badge/Build-2026.0.5--DEV-blue?style=flat" alt="Build">
         </a>
+        <a href="https://vorx.pro">
+            <img src="https://img.shields.io/badge/Website-vorx.pro-success?style=flat" alt="Website">
+        </a>
         <img src="https://img.shields.io/badge/Python-3.8%2B-yellow?style=flat&logo=python" alt="Python">
         <img src="https://img.shields.io/badge/License-Apache%202.0-blue?style=flat" alt="License">
     </p>
+    <p>
+        <h1><a href="https://vorx.pro">vorx.pro</a></h1>
+        Official website
+    </p>
+
 </div>
 
 # Structure
@@ -79,7 +87,7 @@ If you install from `git`, run this commands to build engine core:
 ```bash
 cd Vorx
 pip install -r requirements.txt
-python build.py
+python buildManually.py
 ```
 
 If you install from `releases`, all be done!
@@ -106,7 +114,7 @@ And build engine core, with libs:
 ```bash
 cd Vorx
 pip3 install -r requirements.txt
-python3 build.py
+python3 buildManually.py
 ```
 
 ### Mac
@@ -122,5 +130,5 @@ install all and build
 ```bash
 cd Vorx
 pip3 install -r requirements.txt
-python3 build.py
+python3 buildManually.py
 ```

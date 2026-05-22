@@ -1,2 +1,3 @@
 pysdl2==0.9.17
 cython==3.2.4
+requests==2.32.5

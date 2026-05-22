@@ -2,7 +2,6 @@ from setuptools import setup
 from Cython.Build import cythonize
 from distutils.extension import Extension
 import sys
-import os
 
 inc_dirs = []
 lib_dirs = []
@@ -25,12 +24,12 @@ ext = [
     Extension(
         "vorx.objects.shapes",
         ["vorx/objects/shapes.pyx"],
-        extra_compile_args=compile_args,
+        extra_compile_args=compile_args
     ),
     Extension(
         "vorx.core.maths.vectors",
         ["vorx/core/maths/vectors.pyx"],
-        extra_compile_args=compile_args,
+        extra_compile_args=compile_args
     ),
     Extension(
         "vorx.core.renderer",
@@ -38,14 +37,11 @@ ext = [
         include_dirs=inc_dirs,
         library_dirs=lib_dirs,
         libraries=libs,
-        extra_compile_args=compile_args,
-    ),
+        extra_compile_args=compile_args
+    )
 ]
 
 setup(
-    ext_modules=cythonize(
-        ext,
-        build_dir="compiled",
-    ),
-    script_args=["build_ext", "--build-lib", os.path.abspath("compiled")],
+    ext_modules=cythonize(ext),
+    script_args=['build_ext', '--inplace']
 )
